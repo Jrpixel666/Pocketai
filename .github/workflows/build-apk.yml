@@ -1,0 +1,111 @@
+name: Build APK
+
+# Builds an installable phone APK (arm64) on every push to a branch other than
+# main, or on demand from the Actions tab, and publishes it as a pre-release
+# so it can be downloaded straight to a phone.
+on:
+  push:
+    branches-ignore:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: build-apk-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    env:
+      # Compile llama.rn from source so the repo's native patches are included.
+      # Hexagon (Qualcomm DSP) variants need an SDK that is not installed here.
+      ORG_GRADLE_PROJECT_rnllamaBuildFromSource: 'true'
+      ORG_GRADLE_PROJECT_rnllamaVariants: rnllama,rnllama_v8,rnllama_v8_2,rnllama_v8_2_dotprod,rnllama_v8_2_dotprod_i8mm
+      ORG_GRADLE_PROJECT_reactNativeArchitectures: arm64-v8a
+      # Metro runs out of the default heap on the bundled phonemizer data.
+      NODE_OPTIONS: --max-old-space-size=8192
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      # Must precede setup-node and setup-java: /opt/hostedtoolcache is where
+      # those install.
+      - name: Maximize build space
+        run: sudo rm -rf /usr/share/dotnet /opt/ghc /opt/hostedtoolcache
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.21.0'
+
+      - name: Install Yarn
+        run: npm install -g yarn
+
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('yarn.lock', 'patches/**') }}
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Cache llama.rn native build tree
+        uses: actions/cache@v4
+        with:
+          path: node_modules/llama.rn/android/.cxx
+          key: ${{ runner.os }}-cxx-arm64-${{ hashFiles('yarn.lock', 'patches/**') }}
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Create .env
+        run: |
+          cat > .env << 'EOL'
+          FIREBASE_FUNCTIONS_URL=https://unused.invalid
+          SUPABASE_URL=
+          SUPABASE_ANON_KEY=
+          PALSHUB_API_BASE_URL=
+          APP_URL=pocketpal://app
+          EOL
+
+      - name: Build APK
+        working-directory: android
+        run: ./gradlew assembleProdRelease --no-daemon
+
+      - name: Rename APK
+        id: apk
+        run: |
+          set -euo pipefail
+          SRC=$(ls android/app/build/outputs/apk/prod/release/*.apk | head -1)
+          NAME="PocketPal-build-${{ github.run_number }}.apk"
+          mv "$SRC" "$NAME"
+          echo "name=$NAME" >> "$GITHUB_OUTPUT"
+          ls -lh "$NAME"
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.apk.outputs.name }}
+          path: ${{ steps.apk.outputs.name }}
+          retention-days: 30
+
+      - name: Publish pre-release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: apk-build-${{ github.run_number }}
+          target_commitish: ${{ github.sha }}
+          name: PocketPal build ${{ github.run_number }} (${{ github.ref_name }})
+          body: |
+            Phone APK (arm64) built from ${{ github.ref_name }} at ${{ github.sha }}.
+            Download the .apk below on your phone and open it to install.
+          prerelease: true
+          files: ${{ steps.apk.outputs.name }}
