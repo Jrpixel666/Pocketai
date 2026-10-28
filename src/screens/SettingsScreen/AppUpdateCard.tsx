@@ -11,6 +11,7 @@ import {
   AvailableBuild,
   downloadAndInstall,
   fetchLatestBuild,
+  installedBuildDate,
   installedBuildNumber,
   isAppUpdateSupported,
   isNewerThanInstalled,
@@ -84,6 +85,7 @@ export const AppUpdateCard: React.FC = () => {
   };
 
   const installed = installedBuildNumber();
+  const buildDate = installedBuildDate();
   const busy = state.kind === 'checking' || state.kind === 'downloading';
 
   const message = (() => {
@@ -125,6 +127,11 @@ export const AppUpdateCard: React.FC = () => {
               ? copy.localBuild
               : t(copy.installedBuild, {build: installed})}
           </Text>
+          {buildDate && (
+            <Text variant="bodySmall" testID="app-update-built-on">
+              {t(copy.builtOn, {date: buildDate})}
+            </Text>
+          )}
           {message && (
             <Text variant="bodyMedium" testID="app-update-message">
               {message}

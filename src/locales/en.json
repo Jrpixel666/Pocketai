@@ -251,6 +251,7 @@
       "title": "App updates",
       "installedBuild": "Installed: build {{build}}",
       "localBuild": "Installed: local build",
+      "builtOn": "Built on {{date}}",
       "check": "Check for update",
       "upToDate": "You have the latest build.",
       "available": "Build {{build}} is available ({{size}}).",

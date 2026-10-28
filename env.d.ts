@@ -18,6 +18,7 @@ declare module '@env' {
 
   // Set by the GitHub "Build APK" workflow; empty for local builds.
   export const APP_BUILD_NUMBER: string;
+  export const APP_BUILD_DATE: string;
   export const UPDATE_REPO: string;
 
   // Feature Flags

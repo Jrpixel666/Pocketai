@@ -1,6 +1,6 @@
 import {Platform} from 'react-native';
 import * as RNFS from '@dr.pogodin/react-native-fs';
-import {APP_BUILD_NUMBER, UPDATE_REPO} from '@env';
+import {APP_BUILD_DATE, APP_BUILD_NUMBER, UPDATE_REPO} from '@env';
 
 import NativeApkInstaller from '../specs/NativeApkInstaller';
 
@@ -19,6 +19,12 @@ export const installedBuildNumber = (): number | null => {
   const value = Number(APP_BUILD_NUMBER);
   return Number.isInteger(value) && value > 0 ? value : null;
 };
+
+export const installedBuildDate = (): string | null =>
+  typeof APP_BUILD_DATE === 'string' &&
+  /^\d{4}-\d{2}-\d{2}$/.test(APP_BUILD_DATE)
+    ? APP_BUILD_DATE
+    : null;
 
 const updateRepo = (): string | null =>
   typeof UPDATE_REPO === 'string' && REPO_NAME.test(UPDATE_REPO)

@@ -44,3 +44,4 @@ export const APPCHECK_DEBUG_TOKEN_ANDROID = 'test-android-token';
 export const APPCHECK_DEBUG_TOKEN_IOS = 'test-ios-token';
 export const APP_BUILD_NUMBER = '7';
 export const UPDATE_REPO = 'owner/repo';
+export const APP_BUILD_DATE = '2026-10-28';

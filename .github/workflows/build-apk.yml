@@ -89,6 +89,7 @@ jobs:
           PALSHUB_API_BASE_URL=
           APP_URL=pocketpal://app
           APP_BUILD_NUMBER=${{ github.run_number }}
+          APP_BUILD_DATE=$(date -u +%Y-%m-%d)
           UPDATE_REPO=${{ github.repository }}
           EOL
           echo "ORG_GRADLE_PROJECT_appVersionCode=$((1000 + ${{ github.run_number }}))" >> "$GITHUB_ENV"

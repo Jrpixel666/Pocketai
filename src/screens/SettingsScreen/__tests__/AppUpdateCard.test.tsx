@@ -43,6 +43,7 @@ describe('AppUpdateCard', () => {
     const {getByTestId, getByText} = render(<AppUpdateCard />);
 
     expect(getByText('Installed: build 7')).toBeTruthy();
+    expect(getByText('Built on 2026-10-28')).toBeTruthy();
     fireEvent.press(getByTestId('app-update-check'));
 
     await waitFor(() =>
