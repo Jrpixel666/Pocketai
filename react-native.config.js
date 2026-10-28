@@ -7,6 +7,9 @@ module.exports = {
     '@invertase/react-native-apple-authentication': {
       platforms: {android: null},
     },
+    'whisper.rn': {
+      platforms: {android: null},
+    },
   },
   assets: ['./src/assets/fonts'],
 };
