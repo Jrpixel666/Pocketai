@@ -58,6 +58,9 @@ export const __setDocumentDirectoryPath = path => {
   });
 };
 export const copyFile = jest.fn().mockResolvedValue(true);
+export const existsAssets = jest.fn().mockResolvedValue(false);
+export const copyFileAssets = jest.fn().mockResolvedValue(undefined);
+export const moveFile = jest.fn().mockResolvedValue(undefined);
 
 // Expose method to reset state for tests
 export const __resetMockState = () => {
@@ -79,6 +82,9 @@ const RNFS = {
   LibraryDirectoryPath,
   MainBundlePath,
   copyFile,
+  existsAssets,
+  copyFileAssets,
+  moveFile,
   __resetMockState,
   __setDocumentDirectoryPath,
 };

@@ -1,6 +1,7 @@
 import {authService} from './AuthService';
 import {getAuthHeaders} from './supabase';
 import {clientHeaders, getApiBase} from './apiBase';
+import {PALSHUB_ENABLED} from './enabled';
 import type {
   PalsQuery,
   LibraryQuery,
@@ -157,7 +158,7 @@ class PalsHubApiService {
   constructor() {}
 
   private isConfigured(): boolean {
-    return !!(this.apiBase && this.apiBase !== 'undefined');
+    return PALSHUB_ENABLED && !!(this.apiBase && this.apiBase !== 'undefined');
   }
 
   // Get authentication headers using fresh session from Supabase

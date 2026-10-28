@@ -21,6 +21,9 @@ const setWindowWidth = (width: number) => {
   mockWindowListeners.forEach(listener => listener());
 };
 
+// These tests cover PalsHub itself, which this build switches off.
+jest.mock('../../../services/palshub/enabled', () => ({PALSHUB_ENABLED: true}));
+
 jest.mock('react-native/Libraries/Utilities/useWindowDimensions', () => {
   const {useSyncExternalStore} = require('react');
 

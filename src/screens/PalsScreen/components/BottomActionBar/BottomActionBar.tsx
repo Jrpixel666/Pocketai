@@ -9,6 +9,7 @@ import {SearchIcon, UserIcon} from '../../../../assets/icons';
 
 import {useTheme} from '../../../../hooks';
 import {L10nContext} from '../../../../utils';
+import {PALSHUB_ENABLED} from '../../../../services';
 
 import {createStyles} from './styles';
 import {AddPalMenu} from '../AddPalMenu';
@@ -65,19 +66,21 @@ export const BottomActionBar: React.FC<BottomActionBarProps> = observer(
       <View style={styles.container}>
         <View style={styles.actionBar}>
           {/* Search */}
-          <ActionButton
-            action="search"
-            label={l10n.palsScreen.search}
-            icon={
-              <SearchIcon
-                stroke={iconColor}
-                width={iconSize}
-                height={iconSize}
-              />
-            }
-            isActive={false}
-            onPress={() => onActionPress('search')}
-          />
+          {PALSHUB_ENABLED && (
+            <ActionButton
+              action="search"
+              label={l10n.palsScreen.search}
+              icon={
+                <SearchIcon
+                  stroke={iconColor}
+                  width={iconSize}
+                  height={iconSize}
+                />
+              }
+              isActive={false}
+              onPress={() => onActionPress('search')}
+            />
+          )}
 
           {/* Add Pal Menu */}
           <AddPalMenu
@@ -87,17 +90,25 @@ export const BottomActionBar: React.FC<BottomActionBarProps> = observer(
           />
 
           {/* Profile */}
-          <ActionButton
-            action="profile"
-            label={
-              isAuthenticated ? l10n.palsScreen.profile : l10n.palsScreen.signIn
-            }
-            icon={
-              <UserIcon stroke={iconColor} width={iconSize} height={iconSize} />
-            }
-            isActive={false}
-            onPress={() => onActionPress('profile')}
-          />
+          {PALSHUB_ENABLED && (
+            <ActionButton
+              action="profile"
+              label={
+                isAuthenticated
+                  ? l10n.palsScreen.profile
+                  : l10n.palsScreen.signIn
+              }
+              icon={
+                <UserIcon
+                  stroke={iconColor}
+                  width={iconSize}
+                  height={iconSize}
+                />
+              }
+              isActive={false}
+              onPress={() => onActionPress('profile')}
+            />
+          )}
         </View>
       </View>
     );

@@ -1,5 +1,8 @@
 // Tests for AuthService.loadUserProfile column-narrowing and no-rows handling
 
+// These tests cover PalsHub itself, which this build switches off.
+jest.mock('../enabled', () => ({PALSHUB_ENABLED: true}));
+
 describe('AuthService.loadUserProfile', () => {
   const setup = (singleResult: {data: any; error: any}) => {
     jest.resetModules();

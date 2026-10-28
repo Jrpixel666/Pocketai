@@ -58,3 +58,5 @@ module.exports.supabase = supabase;
 module.exports.getAuthHeaders = getAuthHeaders;
 module.exports.isAuthenticated = isAuthenticated;
 module.exports.getCurrentUser = getCurrentUser;
+module.exports.PALSHUB_ENABLED =
+  require('../../src/services/palshub/enabled').PALSHUB_ENABLED;

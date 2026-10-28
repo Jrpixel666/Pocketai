@@ -66,7 +66,7 @@ import {
   purchaseStore,
   voiceModeStore,
 } from '../../store';
-import {authService} from '../../services';
+import {PALSHUB_ENABLED, authService} from '../../services';
 import type {SearchProviderId} from '../../services/search/types';
 import {
   ASR_DISK_HEADROOM_FACTOR,
@@ -1684,9 +1684,13 @@ export const SettingsScreen: React.FC = observer(() => {
             </Card>
           )}
 
-          <PurchasesCard onSignInPress={() => setShowAuthSheet(true)} />
+          {PALSHUB_ENABLED && (
+            <>
+              <PurchasesCard onSignInPress={() => setShowAuthSheet(true)} />
 
-          <AccountCard />
+              <AccountCard />
+            </>
+          )}
 
           {/* Export Options */}
           <Card elevation={0} style={styles.card}>

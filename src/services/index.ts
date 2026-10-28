@@ -7,6 +7,7 @@ export {
   RetryHandler,
   isAuthenticated,
   getCurrentUser,
+  PALSHUB_ENABLED,
 } from './palshub';
 
 // Types

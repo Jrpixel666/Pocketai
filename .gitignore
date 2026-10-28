@@ -112,3 +112,5 @@ android/android-build.log
 # screenshot inventories). Live in the dev-team repo and are sometimes
 # synced into the worktree for local reference; never committed here.
 workflows/
+# Bundled GGUF model (fetched by scripts/fetch-bundled-model.sh)
+android/app/src/main/assets/models/

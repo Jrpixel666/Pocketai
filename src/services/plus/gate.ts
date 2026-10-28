@@ -13,7 +13,11 @@ export const plusGate = observable(
   {request: observable.ref},
 );
 
-const available = computed(() => shippedPlusFeatures().length > 0);
+const available = computed(
+  () =>
+    purchaseStore.availability !== 'unavailable' &&
+    shippedPlusFeatures().length > 0,
+);
 
 let returnFocusOnClose = false;
 

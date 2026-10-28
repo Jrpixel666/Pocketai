@@ -47,7 +47,7 @@ import {
 } from '../../utils/pal-templates';
 
 // Services and stores
-import {authService, syncService} from '../../services';
+import {PALSHUB_ENABLED, authService, syncService} from '../../services';
 import {palStore, purchaseStore, Pal} from '../../store';
 import {hasVideoCapability} from '../../utils/pal-capabilities';
 
@@ -106,6 +106,9 @@ export const PalsScreen: React.FC = observer(() => {
 
   useEffect(() => {
     const runInitialSetup = async () => {
+      if (!PALSHUB_ENABLED) {
+        return;
+      }
       try {
         // Start sync service if user is authenticated
         if (authService.isAuthenticated) {
@@ -150,6 +153,9 @@ export const PalsScreen: React.FC = observer(() => {
   };
 
   const loadData = async () => {
+    if (!PALSHUB_ENABLED) {
+      return;
+    }
     try {
       // Load public pals for browsing
       await palStore.searchPalsHubPals({sortBy: 'newest', limit: 20});
@@ -347,7 +353,7 @@ export const PalsScreen: React.FC = observer(() => {
   return (
     <View style={styles.container}>
       {/* Compact Auth Bar - Only for unauthenticated users and when not dismissed */}
-      {!authService.isAuthenticated && showAuthBar && (
+      {PALSHUB_ENABLED && !authService.isAuthenticated && showAuthBar && (
         <CompactAuthBar
           isAuthenticated={authService.isAuthenticated}
           onSignInPress={() => setShowAuth(true)}
@@ -356,19 +362,23 @@ export const PalsScreen: React.FC = observer(() => {
         />
       )}
 
-      {/* Expandable Search */}
-      <ExpandableSearch
-        isExpanded={isSearchExpanded}
-        onToggle={() => setIsSearchExpanded(!isSearchExpanded)}
-        onSearchResults={setSearchResults}
-      />
+      {PALSHUB_ENABLED && (
+        <>
+          {/* Expandable Search */}
+          <ExpandableSearch
+            isExpanded={isSearchExpanded}
+            onToggle={() => setIsSearchExpanded(!isSearchExpanded)}
+            onSearchResults={setSearchResults}
+          />
 
-      {/* Filter Chips */}
-      <FilterChips
-        activeFilter={activeFilter}
-        onFilterChange={setActiveFilter}
-        isAuthenticated={authService.isAuthenticated}
-      />
+          {/* Filter Chips */}
+          <FilterChips
+            activeFilter={activeFilter}
+            onFilterChange={setActiveFilter}
+            isAuthenticated={authService.isAuthenticated}
+          />
+        </>
+      )}
 
       {/* Main Content */}
       {shouldUseSections ? (

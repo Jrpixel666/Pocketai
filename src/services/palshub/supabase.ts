@@ -2,8 +2,11 @@ import {createClient} from '@supabase/supabase-js';
 import {SUPABASE_URL, SUPABASE_ANON_KEY} from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import {PALSHUB_ENABLED} from './enabled';
+
 // Check if Supabase is configured
-const isSupabaseConfigured = !!(SUPABASE_URL && SUPABASE_ANON_KEY);
+const isSupabaseConfigured =
+  PALSHUB_ENABLED && !!(SUPABASE_URL && SUPABASE_ANON_KEY);
 
 // Create Supabase client only if properly configured
 export const supabase = isSupabaseConfigured

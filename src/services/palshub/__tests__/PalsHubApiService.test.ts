@@ -1,5 +1,8 @@
 // Tests for PalsHubApiService
 
+// These tests cover PalsHub itself, which this build switches off.
+jest.mock('../enabled', () => ({PALSHUB_ENABLED: true}));
+
 describe('PalsHubApiService', () => {
   beforeEach(() => {
     jest.resetModules();
