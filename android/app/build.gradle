@@ -76,12 +76,6 @@ def enableProguardInReleaseBuilds = false
 def jscFlavor = 'io.github.react-native-community:jsc-android:2026004.+'
 
 android {
-    // The bundled GGUF model must stay uncompressed so it can be copied out
-    // quickly and does not bloat the build with a pointless compression pass.
-    androidResources {
-        noCompress 'gguf'
-    }
-
     ndkVersion rootProject.ext.ndkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion

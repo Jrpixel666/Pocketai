@@ -70,9 +70,6 @@ import iosRulesRaw from './bundledDeviceRules/rules.ios.json';
 // changes. Crossing this version runs the one-time prune-and-reconcile.
 export const MODEL_LIST_VERSION = 15;
 
-// Must match the file fetched by scripts/fetch-bundled-model.sh.
-const BUNDLED_MODEL_FILENAME = 'Llama-3.2-1B-Instruct-abliterated.Q4_K_M.gguf';
-
 import {
   getHFDefaultSettings,
   getLocalModelDefaultSettings,
@@ -269,9 +266,6 @@ class ModelStore {
   // Projection models orphaned by the vision heal, awaiting deletion; drained
   // every launch (see drainPendingProjectionCleanup).
   pendingProjectionCleanupIds: string[] = [];
-  // Set once the GGUF shipped inside the Android APK has been copied out and
-  // registered, so deleting it later does not bring it back on next launch.
-  bundledModelInstalled: boolean = false;
 
   constructor() {
     makeAutoObservable<
@@ -305,7 +299,6 @@ class ModelStore {
         'availableMemoryCeiling',
         'largestSuccessfulLoad',
         'pendingProjectionCleanupIds',
-        'bundledModelInstalled',
       ],
       storage: AsyncStorage,
     }).then(async () => {
@@ -855,10 +848,6 @@ class ModelStore {
 
     // Load missing GGUF metadata for downloaded models (background, non-blocking)
     this.loadMissingGGUFMetadata();
-
-    this.installBundledModel().catch(error => {
-      console.warn('[ModelStore] bundled model install failed:', error);
-    });
 
     // Check if we need to reload an auto-released model (for app restarts)
     this.checkAndReloadAutoReleasedModel();
@@ -2999,32 +2988,6 @@ class ModelStore {
     if (index !== -1) {
       this.models.splice(index, 1);
     }
-  };
-
-  // Copies the model packaged in the APK's assets into the local-models
-  // folder on first launch and registers it like a user-imported model.
-  installBundledModel = async () => {
-    if (Platform.OS !== 'android' || this.bundledModelInstalled) {
-      return;
-    }
-    const assetPath = `models/${BUNDLED_MODEL_FILENAME}`;
-    if (!(await RNFS.existsAssets(assetPath))) {
-      return;
-    }
-    const localDir = `${RNFS.DocumentDirectoryPath}/models/local`;
-    const destPath = `${localDir}/${BUNDLED_MODEL_FILENAME}`;
-    await RNFS.mkdir(localDir);
-    const partialPath = `${destPath}.part`;
-    if (!(await RNFS.exists(destPath))) {
-      await RNFS.copyFileAssets(assetPath, partialPath);
-      await RNFS.moveFile(partialPath, destPath);
-    }
-    if (!this.models.some(m => m.fullPath === destPath)) {
-      await this.addLocalModel(destPath);
-    }
-    runInAction(() => {
-      this.bundledModelInstalled = true;
-    });
   };
 
   addLocalModel = async (localFilePath: string) => {
