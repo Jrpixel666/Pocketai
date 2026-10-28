@@ -16,6 +16,10 @@ declare module '@env' {
   // App Configuration
   export const APP_URL: string;
 
+  // Set by the GitHub "Build APK" workflow; empty for local builds.
+  export const APP_BUILD_NUMBER: string;
+  export const UPDATE_REPO: string;
+
   // Feature Flags
   export const ENABLE_PALSHUB_INTEGRATION: string;
   export const ENABLE_AUTHENTICATION: string;

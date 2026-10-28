@@ -14,6 +14,8 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.RUN_USER_INITIATED_JOBS" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- In-app "update to latest build" hands downloaded APKs to the installer -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <uses-feature android:name="android.hardware.camera" android:required="false" />
     <uses-feature android:name="android.hardware.camera.any" android:required="false" />
 
@@ -72,6 +74,16 @@
         <uses-native-library
             android:name="libcdsprpc.so"
             android:required="false" />
+
+        <provider
+            android:name="com.pocketpal.ApkFileProvider"
+            android:authorities="${applicationId}.apkinstaller"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/apk_installer_paths" />
+        </provider>
     </application>
 
 </manifest>

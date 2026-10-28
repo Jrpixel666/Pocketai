@@ -246,6 +246,19 @@
       "signInAgain": "Please sign in again",
       "creatorSupport": "Creator accounts are deleted by our support team: {{contact}}",
       "failed": "Could not delete, try again"
+    },
+    "appUpdate": {
+      "title": "App updates",
+      "installedBuild": "Installed: build {{build}}",
+      "localBuild": "Installed: local build",
+      "check": "Check for update",
+      "upToDate": "You have the latest build.",
+      "available": "Build {{build}} is available ({{size}}).",
+      "install": "Download and install",
+      "downloading": "Downloading… {{percent}}%",
+      "installPrompt": "Confirm the install in the window Android shows. If it asks, allow PocketPal to install apps.",
+      "checkFailed": "Couldn't check for updates. Check your connection and try again.",
+      "installFailed": "Couldn't download or install the update. Try again."
     }
   },
   "memory": {

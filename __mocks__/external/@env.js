@@ -42,3 +42,5 @@ export const FIREBASE_FUNCTIONS_URL = 'https://test-firebase-functions.com';
 export const PALSHUB_API_BASE_URL = 'https://palshub.ai';
 export const APPCHECK_DEBUG_TOKEN_ANDROID = 'test-android-token';
 export const APPCHECK_DEBUG_TOKEN_IOS = 'test-ios-token';
+export const APP_BUILD_NUMBER = '7';
+export const UPDATE_REPO = 'owner/repo';

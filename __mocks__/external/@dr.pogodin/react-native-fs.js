@@ -45,6 +45,7 @@ export const hash = jest.fn();
 let documentDirectoryPath = '/path/to/documents';
 export const DocumentDirectoryPath = documentDirectoryPath;
 export const LibraryDirectoryPath = '/path/to/library';
+export const CachesDirectoryPath = '/path/to/caches';
 export const MainBundlePath = '/path/to/bundle';
 
 // Allow tests to override the path
@@ -77,6 +78,7 @@ const RNFS = {
   hash,
   DocumentDirectoryPath,
   LibraryDirectoryPath,
+  CachesDirectoryPath,
   MainBundlePath,
   copyFile,
   __resetMockState,

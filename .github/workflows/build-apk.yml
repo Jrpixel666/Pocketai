@@ -1,8 +1,8 @@
 name: Build APK
 
-# Builds an installable phone APK (arm64) on every push to a branch other than
-# main, or on demand from the Actions tab, and publishes it as a pre-release
-# so it can be downloaded straight to a phone.
+# Checks and builds an installable phone APK (arm64) on every push to a branch
+# other than main, or on demand from the Actions tab, and publishes it as a
+# pre-release. The app's Settings > App updates card installs these releases.
 on:
   push:
     branches-ignore:
@@ -54,6 +54,16 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
+      # A failing check stops the run, so no APK is published from broken code.
+      - name: Lint
+        run: yarn lint
+
+      - name: Typecheck
+        run: yarn typecheck
+
+      - name: Test
+        run: yarn test --coverage=false --silent
+
       - name: Cache llama.rn native build tree
         uses: actions/cache@v4
         with:
@@ -67,15 +77,21 @@ jobs:
           distribution: 'temurin'
           cache: 'gradle'
 
-      - name: Create .env
+      # APP_BUILD_NUMBER and UPDATE_REPO let the in-app updater find newer
+      # releases; versionCode stays above upstream's 155 and rises every run
+      # so each APK installs as an upgrade.
+      - name: Create .env and version
         run: |
-          cat > .env << 'EOL'
+          cat > .env << EOL
           FIREBASE_FUNCTIONS_URL=https://unused.invalid
           SUPABASE_URL=
           SUPABASE_ANON_KEY=
           PALSHUB_API_BASE_URL=
           APP_URL=pocketpal://app
+          APP_BUILD_NUMBER=${{ github.run_number }}
+          UPDATE_REPO=${{ github.repository }}
           EOL
+          echo "ORG_GRADLE_PROJECT_appVersionCode=$((1000 + ${{ github.run_number }}))" >> "$GITHUB_ENV"
 
       - name: Build APK
         working-directory: android

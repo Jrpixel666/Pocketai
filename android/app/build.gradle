@@ -85,7 +85,8 @@ android {
         applicationId "com.pocketpalai"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 155
+        // CI passes -PappVersionCode so each cloud build installs as an upgrade.
+        versionCode((findProperty("appVersionCode") ?: "155").toString().toInteger())
         versionName "1.21.2"
         ndk {
             // Follows reactNativeArchitectures (gradle.properties) so a

@@ -55,7 +55,10 @@ const whisperCpp = fs.readFileSync(
   path.join(WHISPER_CPP, 'whisper.cpp'),
   'utf-8',
 );
-const ciWorkflow = read('.github/workflows/ci.yml');
+// This fork builds only Android in CI; upstream's iOS workflow may be absent.
+const CI_WORKFLOW = '.github/workflows/ci.yml';
+const hasCiWorkflow = fs.existsSync(path.join(ROOT, CI_WORKFLOW));
+const ciWorkflow = hasCiWorkflow ? read(CI_WORKFLOW) : '';
 
 const kernelSet = parseKernelSet(metalDevice, 'GGML_METAL_LIBS');
 const kernelFiles = listKernelFiles(GGML_METAL);
@@ -641,7 +644,7 @@ describe('ggml header resolution in the llama-rn and whisper-rn pods', () => {
   });
 });
 
-describe('the iOS CI job', () => {
+(hasCiWorkflow ? describe : describe.skip)('the iOS CI job', () => {
   const job = ciWorkflow.match(
     /^ {2}build-ios:\n([\s\S]*?)(?=^ {2}[\w-]+:\n|(?![\s\S]))/m,
   );
