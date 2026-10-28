@@ -73,6 +73,9 @@ export class UIStore {
 
   // Per-session, in-memory only. Reset on completion. Not persisted.
   onboardingState: OnboardingState = {...INITIAL_ONBOARDING_STATE};
+  // One-shot: the Models screen opens Hugging Face search on its next mount.
+  // Runtime only, never persisted.
+  pendingModelSearch: boolean = false;
 
   // Per-modelId dismissal of the download banner. Per-session — once the
   // download completes, the entry can be cleared so a fresh ready-to-load
@@ -205,6 +208,22 @@ export class UIStore {
     runInAction(() => {
       this.onboardingState.selectedModelId = modelId;
     });
+  }
+
+  requestModelSearch() {
+    runInAction(() => {
+      this.pendingModelSearch = true;
+    });
+  }
+
+  consumeModelSearchRequest(): boolean {
+    if (!this.pendingModelSearch) {
+      return false;
+    }
+    runInAction(() => {
+      this.pendingModelSearch = false;
+    });
+    return true;
   }
 
   completeOnboarding({

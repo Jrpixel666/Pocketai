@@ -26,4 +26,12 @@ export const createStyles = (theme: Theme) =>
       width: 335,
       alignSelf: 'center',
     },
+    searchLink: {
+      ...theme.typography.bodyM,
+      color: theme.colors.primary,
+      textAlign: 'center',
+      textDecorationLine: 'underline',
+      marginTop: theme.spacing.m,
+      paddingVertical: theme.spacing.s,
+    },
   });

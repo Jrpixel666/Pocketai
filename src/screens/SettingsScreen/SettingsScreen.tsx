@@ -357,6 +357,8 @@ export const SettingsScreen: React.FC = observer(() => {
         <ScrollView
           contentContainerStyle={styles.container}
           keyboardShouldPersistTaps="handled">
+          <AppUpdateCard />
+
           {/* Model Initialization Settings */}
           <Card elevation={0} style={styles.card}>
             <Card.Title title={l10n.settings.modelInitializationSettings} />
@@ -1692,8 +1694,6 @@ export const SettingsScreen: React.FC = observer(() => {
               <AccountCard />
             </>
           )}
-
-          <AppUpdateCard />
 
           {/* Export Options */}
           <Card elevation={0} style={styles.card}>

@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {Text, View} from 'react-native';
+import {Pressable, Text, View} from 'react-native';
 import {observer} from 'mobx-react';
 
 import {modelStore, uiStore} from '../../../store';
@@ -29,7 +29,8 @@ const formatSize = (bytes: number | undefined): string => {
 };
 
 export const Onboarding6Screen: React.FC = observer(() => {
-  const {l10n, goBack, finish, isFinishing} = useOnboardingHandlers(6);
+  const {l10n, goBack, finish, searchModels, isFinishing} =
+    useOnboardingHandlers(6);
   const theme = useTheme();
   const styles = createStyles(theme);
   const t = l10n.onboarding;
@@ -111,6 +112,13 @@ export const Onboarding6Screen: React.FC = observer(() => {
               recommendedBadgeLabel={t.screen6.recommended}
               onSelect={id => uiStore.setOnboardingModelId(id)}
             />
+            <Pressable
+              onPress={searchModels}
+              disabled={isFinishing}
+              accessibilityRole="button"
+              testID="onboarding-search-models">
+              <Text style={styles.searchLink}>{t.screen6.searchAllModels}</Text>
+            </Pressable>
           </View>
         </>
       }

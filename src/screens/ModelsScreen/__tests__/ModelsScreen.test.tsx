@@ -12,7 +12,7 @@ import {
 
 import {ModelsScreen} from '../ModelsScreen';
 
-import {modelStore, uiStore} from '../../../store';
+import {hfStore, modelStore, uiStore} from '../../../store';
 import {
   basicModel,
   downloadedModel,
@@ -76,6 +76,26 @@ describe('ModelsScreen', () => {
       const hfModelSearch = getByTestId('hf-model-search-view');
       expect(hfModelSearch).toBeTruthy();
     });
+  });
+
+  // An open search sheet runs its first Hugging Face query after a 500 ms
+  // debounce; a closed one never queries.
+  it('keeps HF model search closed when none was requested', async () => {
+    render(<ModelsScreen />);
+    await act(async () => {
+      jest.advanceTimersByTime(800);
+    });
+    expect(hfStore.fetchModels).not.toHaveBeenCalled();
+  });
+
+  it('opens HF model search straight away when one was requested', async () => {
+    (uiStore.consumeModelSearchRequest as jest.Mock).mockReturnValueOnce(true);
+
+    render(<ModelsScreen />);
+    await act(async () => {
+      jest.advanceTimersByTime(800);
+    });
+    expect(hfStore.fetchModels).toHaveBeenCalled();
   });
 
   it('adds a local model when the plus FAB is pressed', async () => {

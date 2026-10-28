@@ -144,6 +144,11 @@ const App = observer(() => {
                       <SwitchPoint
                         drawer={
                           <Drawer.Navigator
+                            initialRouteName={
+                              uiStore.pendingModelSearch
+                                ? ROUTES.MODELS
+                                : ROUTES.CHAT
+                            }
                             screenOptions={{
                               headerLeft: () => <HeaderLeft />,
                               drawerStyle: {

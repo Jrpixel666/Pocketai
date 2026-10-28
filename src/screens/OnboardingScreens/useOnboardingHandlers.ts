@@ -38,6 +38,15 @@ export const useOnboardingHandlers = (step: OnboardingStep) => {
     });
   }, []);
 
+  // Leave onboarding for the full Hugging Face search instead of a preset.
+  const searchModels = useCallback(() => {
+    uiStore.requestModelSearch();
+    uiStore.completeOnboarding({
+      topic: uiStore.onboardingState.selectedTopic,
+      modelId: null,
+    });
+  }, []);
+
   const goBack = useCallback(() => {
     if (navigation.canGoBack()) {
       navigation.goBack();
@@ -150,5 +159,14 @@ export const useOnboardingHandlers = (step: OnboardingStep) => {
     }
   }, []);
 
-  return {l10n, next, goBack, skip, finish, selectTopic, isFinishing};
+  return {
+    l10n,
+    next,
+    goBack,
+    skip,
+    finish,
+    selectTopic,
+    searchModels,
+    isFinishing,
+  };
 };

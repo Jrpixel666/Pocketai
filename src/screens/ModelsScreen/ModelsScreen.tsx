@@ -56,6 +56,12 @@ export const ModelsScreen: React.FC = observer(() => {
   const theme = useTheme();
   const styles = createStyles(theme);
 
+  useEffect(() => {
+    if (uiStore.consumeModelSearchRequest()) {
+      setHFSearchVisible(true);
+    }
+  }, []);
+
   const filters = uiStore.pageStates.modelsScreen.filters;
   const expandedGroups = uiStore.pageStates.modelsScreen.expandedGroups;
 

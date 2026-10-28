@@ -1,7 +1,7 @@
 import React from 'react';
 import {runInAction} from 'mobx';
 
-import {render, waitFor} from '../../../../../jest/test-utils';
+import {fireEvent, render, waitFor} from '../../../../../jest/test-utils';
 
 import {L10nContext} from '../../../../utils';
 import {l10n} from '../../../../locales';
@@ -62,6 +62,18 @@ describe('Onboarding6Screen picker', () => {
 
     await waitFor(() => {
       expect(uiStore.setOnboardingModelId).toHaveBeenCalledWith(expectedId);
+    });
+  });
+
+  it('leaves onboarding for the full model search', () => {
+    const {getByTestId} = renderScreen();
+
+    fireEvent.press(getByTestId('onboarding-search-models'));
+
+    expect(uiStore.requestModelSearch).toHaveBeenCalledTimes(1);
+    expect(uiStore.completeOnboarding).toHaveBeenCalledWith({
+      topic: 'education',
+      modelId: null,
     });
   });
 });

@@ -155,6 +155,14 @@ describe('UIStore', () => {
       expect(uiStore.onboardingTopicsSnapshot).toEqual([]);
     });
 
+    it('hands a model-search request to exactly one consumer', () => {
+      expect(uiStore.consumeModelSearchRequest()).toBe(false);
+      uiStore.requestModelSearch();
+      expect(uiStore.pendingModelSearch).toBe(true);
+      expect(uiStore.consumeModelSearchRequest()).toBe(true);
+      expect(uiStore.consumeModelSearchRequest()).toBe(false);
+    });
+
     it('resetOnboarding returns to the clean state', () => {
       uiStore.completeOnboarding({topic: 'smartchat', modelId: 'm'});
       uiStore.resetOnboarding();
